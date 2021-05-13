@@ -1,0 +1,23 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "Employee Tracker application",
+  "main": "employeeTracker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zahid267/Employee_Tracker.git"
+  },
+  "author": "Muhammad Zahid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zahid267/Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/zahid267/Employee_Tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0",
+    "mysql": "^2.18.1"
+  }
+}
