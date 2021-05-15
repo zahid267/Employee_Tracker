@@ -54,22 +54,22 @@ const addEmployee = () => {
   inquirer
     .prompt([
       {
-        name: 'first_name',
+        name: 'firstName',
         type: 'input',
         message: 'What is the employee\'s first name?',
       },
       {
-        name: 'last_name',
+        name: 'lastName',
         type: 'input',
         message: 'What is the employee\'s last name?',
       },
       {
-        name: 'role_id',
+        name: 'roleId',
         type: 'input',
         message: 'What is the employee\'s role?',
       },
       {
-        name: 'managre_id',
+        name: 'managreId',
         type: 'input',
         message: 'Who is the employee\'s manager?',
       }
@@ -88,13 +88,13 @@ const addEmployee = () => {
     .then((answer) => {
       // when finished prompting, insert a new item into the db with that info
       connection.query(
-        'INSERT INTO employee SET ?',
+        'INSERT INTO employees SET ?',
         // QUESTION: What does the || 0 do?
         {
-          first_name: answer.first_name,
-          last_name: answer.last_name,
-          role_id: answer.role_id,
-          manager_id: answer.manager_id || 0,
+          firstName: answer.firstName,
+          lastName: answer.lastName,
+          roleId: answer.roleId,
+          managerId: answer.managerId || 0,
         },
         (err) => {
           if (err) throw err;
@@ -118,8 +118,8 @@ const bidAuction = () => {
           type: 'rawlist',
           choices() {
             const choiceArray = [];
-            results.forEach(({ item_name }) => {
-              choiceArray.push(item_name);
+            results.forEach(({ itemName }) => {
+              choiceArray.push(itemName);
             });
             return choiceArray;
           },
@@ -135,7 +135,7 @@ const bidAuction = () => {
         // get the information of the chosen item
         let chosenItem;
         results.forEach((item) => {
-          if (item.item_name === answer.choice) {
+          if (item.itemName === answer.choice) {
             chosenItem = item;
           }
         });
