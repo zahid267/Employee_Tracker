@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/zahid267/Employee_Tracker#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "inquirer": "^8.0.0",
     "mysql": "^2.18.1"
   }

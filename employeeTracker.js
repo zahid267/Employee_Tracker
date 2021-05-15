@@ -72,8 +72,8 @@ const addEmployee = () => {
         name: 'managre_id',
         type: 'input',
         message: 'Who is the employee\'s manager?',
-      },
-      /*{
+      }
+      /*
         name: 'startingBid',
         type: 'input',
         message: 'What would you like your starting bid to be?',
@@ -168,6 +168,15 @@ const bidAuction = () => {
   });
 };
 */
+const queryAllEmployees = () => {
+  connection.query('SELECT * FROM employees', (err, res) => {
+    if (err) throw err;
+    res.forEach(({ id, firstName, lastName, roleId }) => {
+      console.log(`${id} | ${firstName} | ${lastName} | ${roleId}`);
+    });
+    console.log('-----------------------------------');
+  });
+};
 // connect to the mysql server and sql database
 connection.connect((err) => {
   if (err) throw err;
