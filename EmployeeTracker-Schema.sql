@@ -45,10 +45,15 @@ INSERT INTO roles (title, salary, departmentId) values ('Systems engineer', 1000
 
 
 INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Jane', 'Austen', 2, null);
-INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Mark', 'Twain', 5, null);
-INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Lewis', 'Carroll', 6, null);
-INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Andre', 'Asselin', 7, null);
+INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Mark', 'Twain', 5, 1);
+INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Lewis', 'Carroll', 6, 1);
+INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Andre', 'Asselin', 7, 1);
 
 SELECT * FROM employees;
 SELECT * FROM roles;
 SELECT * FROM departments;
+
+SELECT employees.firstName, employees.lastName, roles.title, roles.salary, departments.name AS department, roles.salary, CONCAT(manager.firstName, ' ',manager.lastName) AS manager
+FROM employees INNER JOIN roles ON employees.roleId = roles.id
+LEFT JOIN departments on roles.departmentId = departments.id
+LEFT JOIN employees manager ON manager.id=employees.managerId;
