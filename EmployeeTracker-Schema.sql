@@ -53,7 +53,14 @@ SELECT * FROM employees;
 SELECT * FROM roles;
 SELECT * FROM departments;
 
+--- list all employees
 SELECT employees.firstName, employees.lastName, roles.title, roles.salary, departments.name AS department, roles.salary, CONCAT(manager.firstName, ' ',manager.lastName) AS manager
 FROM employees INNER JOIN roles ON employees.roleId = roles.id
 LEFT JOIN departments on roles.departmentId = departments.id
 LEFT JOIN employees manager ON manager.id=employees.managerId;
+
+--- Department budget total
+SELECT departments.name AS department, SUM(roles.salary) AS salary
+FROM employees INNER JOIN roles ON employees.roleId = roles.id
+RIGHT JOIN departments on roles.departmentId = departments.id
+GROUP BY department;

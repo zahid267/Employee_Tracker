@@ -24,7 +24,7 @@ const start = () => {
       type: 'list',
       message: 'What Would you like to do?',
       choices: ['View All Employees', 'View All Employees By Department', 'View All Employees By Manager',
-  'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager','Add a new Department','Add a new Role','View all Departments','View all Roles','Exit program']
+  'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager','Add a new Department','Delete a Department','View All Departments','Add a new Role','Delete a Role','View All Roles','View Budget by Department','Exit program']
     })
     .then((answer) => {
       // based on their answer, either call the bid or the post functions
@@ -44,12 +44,18 @@ const start = () => {
         updEmployeeManager();
       } else if (answer.action === 'Add a new Department') {
         addDepartment();
+      } else if (answer.action === 'Delete a Department') {
+        deleteDepartment();
       } else if (answer.action === 'Add a new Role') {
         addRole();
+      } else if (answer.action === 'Delete a Role') {
+        deleteRole();
       }else if (answer.action === 'View All Departments') {
           showAllDepartments();
       }else if (answer.action === 'View All Roles') {
           showAllRoles();
+      }else if(answer.action === 'View Budget by Department'){
+        viewDepartmentBudget();
       } else {
         connection.end();
       }
@@ -109,8 +115,6 @@ const viewByManager = () => {
     start();
   });
   start();
-  //setTimeout(start, 5000);
-  
 };
 // function to handle posting new employee
 const addEmployee = () => {
@@ -157,17 +161,6 @@ const addEmployee = () => {
           },
         message: 'Who is the employee\'s manager?',
       }
-      /*
-        name: 'startingBid',
-        type: 'input',
-        message: 'What would you like your starting bid to be?',
-        validate(value) {
-          if (isNaN(value) === false) {
-            return true;
-          }
-          return false;
-        },
-      },*/
     ])
     .then((answer) => {
       // get the information of the chosen item
@@ -225,11 +218,6 @@ const removeEmployee = () => {
           },
           message: 'Which employee would you like to remove?',
         }
-       /* {
-          name: 'bid',
-          type: 'input',
-          message: 'How much would you like to bid?',
-        },*/
       ])
       .then((answer) => {
         // get the information of the chosen item
@@ -243,9 +231,6 @@ const removeEmployee = () => {
           connection.query(
             'DELETE FROM employees WHERE ?',
             [
-             /* {
-                highest_bid: answer.bid,
-              },*/
               {
                 id: chosenEmp.id,
               },
@@ -425,7 +410,65 @@ const addDepartment = () => {
       );
     });
 };
-// function to handle posting new department
+const deleteDepartment = () => {
+  // query the database for all items being auctioned
+  connection.query('SELECT * FROM departments', (err, results) => {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: 'deptId',
+          type: 'rawlist',
+          choices() {
+            const choiceArray = [];
+            results.forEach(({name}) => {
+              choiceArray.push(name);
+            });
+            return choiceArray;
+          },
+          message: 'Which department would you like to remove?',
+        }
+      ])
+      .then((answer) => {
+        // get the information of the chosen item
+        let chosenDept;
+        results.forEach((item) => {
+            if(answer.deptId === item.name) {
+            chosenDept = item;
+          }
+        });
+
+          connection.query(
+            'DELETE FROM departments WHERE ?',
+            [
+              {
+                id: chosenDept.id,
+              },
+            ],
+            (error) => {
+              if (error) throw err;
+              console.log('The department was removed successfully!');
+              start();
+            }
+          );
+      });
+  });
+};
+const showAllDepartments = () => {
+  const query = `SELECT * FROM departments`;
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+   /* console.log(`id | Department Name`);
+    res.forEach(({ id, name }) => {
+      console.log(`${id} | ${name} `);
+    });*/
+    console.table(res);
+    start();
+  });
+  //start();
+};
+// function to handle posting new Role
 const addRole = () => { 
   connection.query('SELECT * FROM departments', (err, deptresults) => {
     if (err) throw err;
@@ -482,7 +525,81 @@ const addRole = () => {
     });
   });
 };
+const deleteRole = () => {
+  // query the database for all items being auctioned
+  connection.query('SELECT * FROM roles', (err, results) => {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: 'roleId',
+          type: 'rawlist',
+          choices() {
+            const choiceArray = [];
+            results.forEach(({title}) => {
+              choiceArray.push(title);
+            });
+            return choiceArray;
+          },
+          message: 'Which role would you like to remove?',
+        }
+      ])
+      .then((answer) => {
+        // get the information of the chosen item
+        let chosenRole;
+        results.forEach((item) => {
+            if(answer.roleId === item.title) {
+            chosenRole = item;
+          }
+        });
 
+          connection.query(
+            'DELETE FROM roles WHERE ?',
+            [
+              {
+                id: chosenRole.id,
+              },
+            ],
+            (error) => {
+              if (error) throw err;
+              console.log('The role was removed successfully!');
+              start();
+            }
+          );
+      });
+  });
+};
+const showAllRoles = () => {
+  const query = `SELECT roles.id, roles.title, roles.salary, departments.name AS department
+  FROM roles INNER JOIN departments ON roles.departmentId = departments.id`;
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+   /* console.log(`id |Title | Salary | Department`);
+    res.forEach(({ id, title, salary, department}) => {
+      console.log(`${id} | ${title} | ${salary} | ${department}`);
+    });*/
+    console.table(res);
+    start();
+  });
+  //start();
+};
+const viewDepartmentBudget = () =>{
+  const query = `SELECT departments.name AS department, SUM(roles.salary) AS salary
+  FROM employees INNER JOIN roles ON employees.roleId = roles.id
+  RIGHT JOIN departments on roles.departmentId = departments.id
+  GROUP BY department`;
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+   /* console.log(`id |Title | Salary | Department`);
+    res.forEach(({ id, title, salary, department}) => {
+      console.log(`${id} | ${title} | ${salary} | ${department}`);
+    });*/
+    console.table(res);
+    start();
+  });
+  //start();
+};
 // connect to the mysql server and sql database
 connection.connect((err) => {
   if (err) throw err;
