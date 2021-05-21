@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-require("console.table");
+require('console.table');
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -28,7 +28,6 @@ const start = () => {
   'Add an Employee', 'Remove an Employee', 'Update Employee Role', 'Update Employee Manager','Add a new Department','Delete a Department','View All Departments','Add a new Role','Delete a Role','View All Roles','View Budget by Department','Exit program']
     })
     .then((answer) => {
-      // based on their answer, either call the bid or the post functions
       if (answer.action === 'View All Employees') {
         showAllEmployees();
       } else if (answer.action === 'View All Employees By Department') {
@@ -70,13 +69,7 @@ const showAllEmployees = () => {
   LEFT JOIN employees manager ON manager.id=employees.managerId`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-   /* res.forEach(({ id, firstName, lastName, title, department, salary, manager }) => {
-      console.log(`${id} | ${firstName} | ${lastName} | ${title}  | ${department} | ${salary} | ${manager}`);
-    });*/
-    console.log('\n');
     console.table(res);
-   // console.log(res); /// Displays as json data
-    //console.log('-----------------------------------');
     start();
   });
   //start();
@@ -90,15 +83,10 @@ const viewByDept = () => {
   ORDER BY department`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-    /*res.forEach(({ id, firstName, lastName, roleId }) => {
-      console.log(`${id} | ${firstName} | ${lastName} | ${roleId}`);
-    });
-    console.log('-----------------------------------');*/
-    console.log('\n');
     console.table(res);
     start();
   });
-  start();
+  //start();
 };
 const viewByManager = () => {
   const query = `SELECT employees.id, employees.firstName, employees.lastName, roles.title, departments.name AS department, roles.salary AS salary, CONCAT(manager.firstName, ' ',manager.lastName) AS manager
@@ -108,14 +96,10 @@ const viewByManager = () => {
   ORDER BY manager`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-   /*res.forEach(({ id, firstName, lastName, roleId, managerId }) => {
-      console.log(`${id} | ${firstName} | ${lastName} | ${roleId} | ${managerId}`);
-    });*/
-    console.log('\n');
     console.table(res);
     start();
   });
-  start();
+ // start();
 };
 // function to handle posting new employee
 const addEmployee = () => {
@@ -138,7 +122,6 @@ const addEmployee = () => {
       },
       {
         name: 'roleId',
-        //type: 'input',
         type: 'rawlist',
           choices() {
             const choiceArray = [];
@@ -151,7 +134,6 @@ const addEmployee = () => {
       },
       {
         name: 'managerId',
-        //type: 'input',
         type: 'rawlist',
           choices() {
             const choiceArray = [];
@@ -180,7 +162,6 @@ const addEmployee = () => {
       // when finished prompting, insert a new item into the db with that info
       connection.query(
         'INSERT INTO employees SET ?',
-        // QUESTION: What does the || 0 do?
         {
           firstName: answer.firstName,
           lastName: answer.lastName,
@@ -269,7 +250,6 @@ const updEmployeeRole = () => {
         },
         {
           name: 'roleId',
-          //type: 'input',
           type: 'rawlist',
           choices() {
             const choiceArray = [];
@@ -337,7 +317,6 @@ const updEmployeeManager = () => {
         },
         {
           name: 'new_managerId',
-          //type: 'input',
           type: 'rawlist',
           choices() {
             const choiceArray = [];
@@ -398,7 +377,6 @@ const addDepartment = () => {
       // when finished prompting, insert a new item into the db with that info
       connection.query(
         'INSERT INTO departments SET ?',
-        // QUESTION: What does the || 0 do?
         {
           name: answer.name,
         },
@@ -460,10 +438,6 @@ const showAllDepartments = () => {
   const query = `SELECT * FROM departments`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-   /* console.log(`id | Department Name`);
-    res.forEach(({ id, name }) => {
-      console.log(`${id} | ${name} `);
-    });*/
     console.table(res);
     start();
   });
@@ -488,7 +462,6 @@ const addRole = () => {
       },
       {
         name: 'departmentId',
-        //type: 'input',
         type: 'rawlist',
         choices() {
           const choiceArray = [];
@@ -510,7 +483,6 @@ const addRole = () => {
       // when finished prompting, insert a new item into the db with that info
       connection.query(
         'INSERT INTO roles SET ?',
-        // QUESTION: What does the || 0 do?
         {
           title: answer.title,
           salary: answer.salary,
@@ -576,26 +548,18 @@ const showAllRoles = () => {
   FROM roles INNER JOIN departments ON roles.departmentId = departments.id`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-   /* console.log(`id |Title | Salary | Department`);
-    res.forEach(({ id, title, salary, department}) => {
-      console.log(`${id} | ${title} | ${salary} | ${department}`);
-    });*/
     console.table(res);
     start();
   });
   //start();
 };
 const viewDepartmentBudget = () =>{
-  const query = `SELECT departments.name AS department, SUM(roles.salary) AS salary
+  const query = `SELECT departments.name AS department, SUM(roles.salary) AS budget
   FROM employees INNER JOIN roles ON employees.roleId = roles.id
   RIGHT JOIN departments on roles.departmentId = departments.id
   GROUP BY department`;
   connection.query(query, (err, res) => {
     if (err) throw err;
-   /* console.log(`id |Title | Salary | Department`);
-    res.forEach(({ id, title, salary, department}) => {
-      console.log(`${id} | ${title} | ${salary} | ${department}`);
-    });*/
     console.table(res);
     start();
   });

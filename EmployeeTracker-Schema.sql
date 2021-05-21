@@ -33,6 +33,8 @@ INSERT INTO departments (name) values ('Production');
 INSERT INTO departments (name) values ('Finance');
 INSERT INTO departments (name) values ('Account');
 INSERT INTO departments (name) values ('Information Technology');
+INSERT INTO departments (name) values ('Security');
+INSERT INTO departments (name) values ('Human Resource');
 
 INSERT INTO roles (title, salary, departmentId) values ('Database administrator', 800000.00, 8);
 INSERT INTO roles (title, salary, departmentId) values ('Content manager', 100000.00, 8);
@@ -42,12 +44,15 @@ INSERT INTO roles (title, salary, departmentId) values ('Full stack developer', 
 INSERT INTO roles (title, salary, departmentId) values ('Software developer', 100000.00, 8);
 INSERT INTO roles (title, salary, departmentId) values ('Software engineer', 75000.00, 3);
 INSERT INTO roles (title, salary, departmentId) values ('Systems engineer', 100000.00, 3);
-
+INSERT INTO roles (title, salary, departmentId) values ('Mobile developer', 70000.00, 4);
+INSERT INTO roles (title, salary, departmentId) values ('Systems administrator', 80000.00, 1);
 
 INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Jane', 'Austen', 2, null);
 INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Mark', 'Twain', 5, 1);
 INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Lewis', 'Carroll', 6, 1);
 INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Andre', 'Asselin', 7, 1);
+INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Lary', 'Brown', 4, 4);
+INSERT INTO employees (firstName, lastName, roleId, managerId) values ('Terry', 'Miller', 9, 4);
 
 SELECT * FROM employees;
 SELECT * FROM roles;
