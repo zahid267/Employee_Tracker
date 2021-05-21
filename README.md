@@ -37,7 +37,7 @@ You are required to submit the following:
 
 * The URL of the GitHub repository: https://github.com/zahid267/Employee_Tracker 
 
-* A video demonstrating the entirety of the app's functionality: https://drive.google.com/file/d/1T1Sr7Tt6lmLfN4aNv5wFF-i8Ogl-HAgM/view?usp=sharing
+* A video demonstrating the entirety of the app's functionality: https://drive.google.com/file/d/1dN1XdClfVWvEDGo1kRwNmwA5y-jcLM0w/view?usp=sharing
 
 - - -
 © Developed by Muhammad Zahid - May 21, 2021
